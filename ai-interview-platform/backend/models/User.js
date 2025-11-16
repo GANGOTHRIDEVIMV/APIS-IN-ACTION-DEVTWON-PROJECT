@@ -77,6 +77,50 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+    required: true,
+    trim: true
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    lowercase: true,
+    trim: true
+  },
+  password: {
+    type: String,
+    required: true,
+    minlength: 6
+  },
+  phone: {
+    type: String,
+    trim: true
+  },
+  resumeUrl: {
+    type: String
+  },
+  resumeData: {
+    skills: [String],
+    experience: String,
+    education: String,
+    summary: String
+  },
+  targetRole: {
+    type: String,
+    default: 'Software Developer'
+  },
+  readinessScore: {
+    type: Number,
+    default: 0
+  },
+  interviewHistory: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Interview'
+  }],
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
 });
 
 // Hash password before saving
@@ -86,6 +130,8 @@ userSchema.pre('save', async function(next) {
   }
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
+  if (!this.isModified('password')) return next();
+  this.password = await bcrypt.hash(this.password, 10);
   next();
 });
 

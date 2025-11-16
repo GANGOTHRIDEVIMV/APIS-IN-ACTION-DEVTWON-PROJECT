@@ -51,4 +51,30 @@ const questionSchema = new mongoose.Schema({
 // Index for efficient querying
 questionSchema.index({ jobRole: 1, difficulty: 1, category: 1 });
 
+  jobRole: {
+    type: String,
+    required: true
+  },
+  category: {
+    type: String,
+    required: true,
+    enum: ['Technical', 'Behavioral', 'Situational', 'Communication']
+  },
+  difficulty: {
+    type: String,
+    enum: ['Easy', 'Medium', 'Hard'],
+    default: 'Medium'
+  },
+  questionText: {
+    type: String,
+    required: true
+  },
+  expectedKeywords: [String],
+  sampleAnswer: String,
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
+});
+
 module.exports = mongoose.model('Question', questionSchema);
